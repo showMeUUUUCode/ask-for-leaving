@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <!--保证接口和映射文件一一对应  -->
+<mapper namespace="mapper.ApproveMapper">
+	<select id="findListByeLevel" resultMap="lbMap">
+		select p.*,lb.*from user_info_p p,
+(select * from tb_leavebill where level = #{userLevel}) lb
+where lb.user_id=p.user_info_id
+	</select>
+	<resultMap type="LeaveBill" id="lbMap" autoMapping="true">
+		<id column="leavebill_id" property="leavebillId"/>
+		<association property="userInfo" resultMap="userMP" />
+	</resultMap>
+	
+	<resultMap type="UserInfo" id="userMP" autoMapping="true">
+		<id column="user_info_id" property="userInfoId"/>
+	</resultMap>
+	<select id="findapproveListByeLevel" resultMap="lbMap">
+	select p.*,lb.*from user_info_p p,
+(select * from tb_leavebill where level = #{userLevel}) lb
+where lb.user_id=p.user_info_id and state=2
+	</select>
+	
+	<select id="findreloadListByeLevel" resultMap="lbMap">
+	select p.*,lb.*from user_info_p p,
+(select * from tb_leavebill where level &lt; #{userLevel}) lb
+where lb.user_id=p.user_info_id and state in (3,4)
+	</select>
+	<select id="findhistoryListByeLevel" resultMap="lbMap">
+		select p.*,lb.*from user_info_p p,
+	(select * from tb_leavebill where level &lt; #{userLevel}) lb
+	where lb.user_id=p.user_info_id and state in (0,1)
+	</select>
+	<select id="findListByLeaveBillId" resultType="LeaveBill">
+		select * from tb_leavebill where leavebill_id in (
+			<foreach collection="array" item="id" separator=",">
+				#{id}
+			</foreach>
+		)
+	</select>
+	<update id="updateState">
+		update tb_leavebill set state=#{state} ,level =#{level} where leavebill_id=#{leavebillId}
+	</update>
+	<select id="findByLeaveBillId" resultType="LeaveBill">
+		select * from tb_leavebill where leavebill_id=#{leavebillId}
+	</select>
+</mapper>

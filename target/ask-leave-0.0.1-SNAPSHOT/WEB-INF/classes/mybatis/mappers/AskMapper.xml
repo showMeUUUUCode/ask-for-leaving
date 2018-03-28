@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <!--保证接口和映射文件一一对应  -->
+<mapper namespace="mapper.AskMapper">
+	<select id="findNow" resultType="LeaveBill">
+		select * from tb_leavebill where user_id=#{userId} and state not in (0,1)
+	</select>
+	<select id="findList" resultType="LeaveBill">
+		select * from tb_leavebill where user_id=#{userId} and state in(0,1)
+	</select>
+	<insert id="submitAsk">
+		insert into tb_leavebill 
+		(leavebill_id,user_id,days,reason,remark,out_date,state,level,type) 
+		values 
+		(#{leavebillId},#{userInfo.userInfoId},#{days},#{reason},#{remark},#{outDate},#{state},#{level},#{type})
+	</insert>
+	<select id="findByLeaveBillId" resultType="LeaveBill">
+		select * from tb_leavebill where leavebill_id=#{leavebillId}
+	</select>
+	<delete id="deleteByLeaveBillId">
+		delete from tb_leavebill where leavebill_id=#{leavebillId}
+	</delete>
+</mapper>

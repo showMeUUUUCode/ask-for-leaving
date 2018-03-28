@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <!--保证接口和映射文件一一对应  -->
+<mapper namespace="mapper.UserInfoMapper">
+	<select id="findUserInfoByuserId" resultType="UserInfo">
+		select * from user_info_p where user_info_id =#{userId}
+	</select>
+	<select id="findAll" resultType="UserInfo">
+		select * from user_info_p
+	</select>	
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <!--保证接口和映射文件一一对应  -->
+<mapper namespace="mapper.UserMapper">
+<!--根据userid删除role_user_p中的数据  -->
+	<delete id="deleteRoleUsers">
+		delete from role_user_p where user_id = #{userId}
+	</delete>
+	
+	
+	<!--根据userId 查询中间表数据  -->
+	<select id="finduRoleList" resultType="string">
+		select role_id from role_user_p where user_id = #{userId}
+	</select>
+	
+	
+	<select id="findUserByUserName" resultType="User">
+	select * from user_p where username=#{username}
+	</select>
+	
+	
+	<!--根据userId查询模块信息  -->
+	<select id="findPrililegeInfoList" resultType="string">
+		select name
+ 		from module_p
+ 		where module_id in
+       	(select module_id
+          from role_module_p
+          where role_id in
+               (select role_id from role_user_p where user_id = #{userId})
+        )
+	</select>
+	
+	
+</mapper>
